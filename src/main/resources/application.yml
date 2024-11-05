@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: "devolutions-svc"
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/devolution_service_maxi_clone
+    username: erikssonherlo
+    password: 201830459
+
+  rabbitmq:
+    host: rabbitmq-service.default.svc.cluster.local
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: "/"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://34.138.194.76:8761/eureka/
+  instance:
+    prefer-ip-address: false
+    hostname: devolutions-svc
+    instance-id: ${spring.application.name}:${server.port}
+
+server:
+  port: 8086

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devolutions
+  labels:
+    app: devolutions
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devolutions
+  template:
+    metadata:
+      labels:
+        app: devolutions
+    spec:
+      containers:
+        - name: devolutions
+          image: us-east1-docker.pkg.dev/maxi-clone/mc-repository-dev/devolutions:latest
+          ports:
+            - containerPort: 8086
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devolutions-svc
+  labels:
+    app: devolutions
+spec:
+  type: LoadBalancer
+  selector:
+    app: devolutions
+  ports:
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
