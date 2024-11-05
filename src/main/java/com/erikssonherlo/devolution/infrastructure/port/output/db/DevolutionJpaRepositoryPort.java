@@ -25,6 +25,8 @@ public interface DevolutionJpaRepositoryPort {
 
     Page<Devolution> findAllDevolutionsByStoreIdAndStatus(Pageable pageable, List<Long> storeIds, DevolutionStatus status);
 
+    List<Devolution> reportAllDevolutions(List<Long> storeIds, DevolutionStatus status, String startDate, String endDate);
+
     Devolution saveDevolution(Devolution devolution);
 
     Devolution updateDevolution(Long id, Devolution devolution);

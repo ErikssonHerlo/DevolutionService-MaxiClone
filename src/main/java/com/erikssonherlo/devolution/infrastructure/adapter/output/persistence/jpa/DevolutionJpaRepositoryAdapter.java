@@ -61,6 +61,15 @@ public class DevolutionJpaRepositoryAdapter implements DevolutionJpaRepositoryPo
         return devolutionJpaRepository.findByStoreIdIn(storeIds, pageable)
                 .map(this::mapToDomain);
     }
+
+    @Override
+    public List<Devolution> reportAllDevolutions(List<Long> storeIds, DevolutionStatus status, String startDate, String endDate) {
+
+        return devolutionJpaRepository.findAllByStoreIdInAndStatusAndCreatedAtBetween(storeIds, status.toString(), startDate, endDate).stream()
+                .map(this::mapToDomain)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Devolution saveDevolution(Devolution devolution) {
         DevolutionEntity devolutionEntity = mapToEntity(devolution, false);
