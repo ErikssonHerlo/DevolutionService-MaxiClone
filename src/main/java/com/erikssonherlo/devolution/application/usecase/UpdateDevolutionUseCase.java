@@ -10,6 +10,7 @@ import com.erikssonherlo.devolution.domain.model.enums.DevolutionStatus;
 import com.erikssonherlo.devolution.infrastructure.port.input.UpdateDevolutionInputPort;
 import com.erikssonherlo.devolution.infrastructure.port.output.db.DevolutionJpaRepositoryPort;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class UpdateDevolutionUseCase implements UpdateDevolutionInputPort {
     private  final HttpServletRequest request;
 
     @Override
+    @Transactional
     public Devolution updateDevolution(Long id, UpdateDevolutionDTO updateDevolutionDTO) {
         try {
             String token = jwtService.extractToken(request);

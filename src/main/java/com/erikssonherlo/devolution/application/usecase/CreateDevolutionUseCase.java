@@ -9,6 +9,7 @@ import com.erikssonherlo.devolution.domain.model.enums.DevolutionStatus;
 import com.erikssonherlo.devolution.infrastructure.port.input.CreateDevolutionInputPort;
 import com.erikssonherlo.devolution.infrastructure.port.output.db.DevolutionJpaRepositoryPort;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class CreateDevolutionUseCase implements CreateDevolutionInputPort {
     private final JWTService jwtService;
 
     @Override
+    @Transactional
     public Devolution createDevolution(CreateDevolutionDTO createDevolutionDTO) {
         try {
             String token = jwtService.extractToken(request);
