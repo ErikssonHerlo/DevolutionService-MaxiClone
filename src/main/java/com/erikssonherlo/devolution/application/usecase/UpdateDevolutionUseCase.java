@@ -42,13 +42,7 @@ public class UpdateDevolutionUseCase implements UpdateDevolutionInputPort {
             notificationDTO.setTo(devolution.get().getUserEmail());
             notificationDTO.setSubject("YOUR DEVOLUTION #" + devolution.get().getDevolutionId() + " WAS UPDATED");
             notificationDTO.setTemplate(TemplateType.DEVOLUTION_CREATED);
-            if(status.equals(DevolutionStatus.ACCEPTED)){
-                notificationDTO.setMessage("Your devolution was accepted");
-            } else if(status.equals(DevolutionStatus.REJECTED)){
-                notificationDTO.setMessage("Your devolution was rejected");
-            } else {
-                notificationDTO.setMessage("Your devolution was updated");
-            }
+            notificationDTO.setMessage(status.toString());
             rabbitTemplate.convertAndSend(queueName, notificationDTO);
             System.out.println("Email enviado a la cola: " + notificationDTO);
             return devolutionRepositoryPort.updateDevolution(id, devolution.get());
