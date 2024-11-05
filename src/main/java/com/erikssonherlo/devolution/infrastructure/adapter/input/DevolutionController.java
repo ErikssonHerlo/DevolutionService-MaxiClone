@@ -2,6 +2,7 @@ package com.erikssonherlo.devolution.infrastructure.adapter.input;
 
 import com.erikssonherlo.common.application.response.ApiResponse;
 import com.erikssonherlo.common.application.response.PaginatedResponse;
+import com.erikssonherlo.common.infraestructure.security.anotation.ValidateRole;
 import com.erikssonherlo.devolution.application.dto.CreateDevolutionDTO;
 import com.erikssonherlo.devolution.application.dto.DamagedProductReportDTO;
 import com.erikssonherlo.devolution.application.dto.UpdateDevolutionDTO;
@@ -33,6 +34,7 @@ public class DevolutionController {
     private final ReportAllDevolutionsInputPort reportAllDevolutionsInputPort;
     private final ReportDamagedProductsInputPort reportDamagedProductsInputPort;
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @GetMapping()
     public PaginatedResponse<List<Devolution>> getAllDevolutions(
             @PageableDefault(page = 0,size = 10) Pageable pageable,
@@ -44,33 +46,39 @@ public class DevolutionController {
         return new PaginatedResponse<>(HttpStatus.OK.value(),"SUCCESS", HttpStatus.OK,devolutionsPage.getContent(),devolutionsPage.getPageable(),devolutionsPage.isLast(),devolutionsPage.isFirst(),devolutionsPage.hasNext(),devolutionsPage.hasPrevious(),devolutionsPage.getTotalPages(),(int) devolutionsPage.getTotalElements());
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @GetMapping("/status/{status}")
     public PaginatedResponse<List<Devolution>> getAllDevolutionsByStatus(@PathVariable String status, @PageableDefault(page = 0,size = 10) Pageable pageable){
         Page<Devolution> devolutionsPage = getAllDevolutionsByStatusInputPort.getAllDevolutionsByStatus(status,pageable);
         return new PaginatedResponse<>(HttpStatus.OK.value(),"SUCCESS", HttpStatus.OK,devolutionsPage.getContent(),devolutionsPage.getPageable(),devolutionsPage.isLast(),devolutionsPage.isFirst(),devolutionsPage.hasNext(),devolutionsPage.hasPrevious(),devolutionsPage.getTotalPages(),(int) devolutionsPage.getTotalElements());
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @GetMapping("/{id}")
     public ApiResponse<Devolution> findDevolution(@PathVariable Long id){
         Devolution devolution = findDevolutionInputPort.findDevolution(id);
         return new ApiResponse<>(HttpStatus.OK.value(),"SUCCESS", HttpStatus.OK,devolution);
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE"})
     @PostMapping()
     public ApiResponse<Devolution> createDevolution(@RequestBody @Valid CreateDevolutionDTO createDevolutionDTO){
         return new ApiResponse<>(HttpStatus.CREATED.value(),"SUCCESS",HttpStatus.CREATED,createDevolutionInputPort.createDevolution(createDevolutionDTO));
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @PutMapping("/{id}")
     public ApiResponse<Devolution> updateDevolution(@PathVariable Long id, @RequestBody @Valid UpdateDevolutionDTO updateDevolutionDTO){
         return new ApiResponse<>(HttpStatus.OK.value(),"SUCCESS",HttpStatus.OK, updateDevolutionInputPort.updateDevolution(id,updateDevolutionDTO));
     }
 
+    @ValidateRole({"ADMINISTRATOR"})
     @DeleteMapping("/{id}")
     public ApiResponse<?> deleteDevolution(@PathVariable Long id){
         return new ApiResponse<>(HttpStatus.NO_CONTENT.value(),"SUCCESS",HttpStatus.NO_CONTENT,deleteDevolutionInputPort.deleteDevolution(id));
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @GetMapping("/reports/all-devolutions")
     public ApiResponse<List<Devolution>> reportAllDevolutions(@RequestParam(value = "storeId", required = false) List<Long> storeIds,
                                                           @RequestParam(value = "status", required = false) String status,
@@ -80,6 +88,7 @@ public class DevolutionController {
                 reportAllDevolutionsInputPort.reportAllDevolutions(storeIds, status, startDate, endDate));
     }
 
+    @ValidateRole({"ADMINISTRATOR", "STORE", "WAREHOUSE"})
     @GetMapping("/reports/damaged-products")
     public ApiResponse<List<DamagedProductReportDTO>> getDamagedProductsReport(
             @RequestParam("storeId") Long storeId,
