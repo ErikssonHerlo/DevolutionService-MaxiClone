@@ -3,6 +3,7 @@ package com.erikssonherlo.devolution.infrastructure.adapter.input;
 import com.erikssonherlo.common.application.response.ApiResponse;
 import com.erikssonherlo.common.application.response.PaginatedResponse;
 import com.erikssonherlo.devolution.application.dto.CreateDevolutionDTO;
+import com.erikssonherlo.devolution.application.dto.DamagedProductReportDTO;
 import com.erikssonherlo.devolution.application.dto.UpdateDevolutionDTO;
 import com.erikssonherlo.devolution.domain.model.Devolution;
 import com.erikssonherlo.devolution.infrastructure.port.input.*;
@@ -30,6 +31,7 @@ public class DevolutionController {
     private final GetAllDevolutionsInputPort getAllDevolutionsInputPort;
     private final GetAllDevolutionsByStatusInputPort getAllDevolutionsByStatusInputPort;
     private final ReportAllDevolutionsInputPort reportAllDevolutionsInputPort;
+    private final ReportDamagedProductsInputPort reportDamagedProductsInputPort;
 
     @GetMapping()
     public PaginatedResponse<List<Devolution>> getAllDevolutions(
@@ -76,5 +78,15 @@ public class DevolutionController {
                                                           @RequestParam(value = "endDate", required = false) String endDate) {
         return new ApiResponse<>(HttpStatus.OK.value(), "SUCCESS", HttpStatus.OK,
                 reportAllDevolutionsInputPort.reportAllDevolutions(storeIds, status, startDate, endDate));
+    }
+
+    @GetMapping("/reports/damaged-products")
+    public ApiResponse<List<DamagedProductReportDTO>> getDamagedProductsReport(
+            @RequestParam("storeId") Long storeId,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate) {
+
+        List<DamagedProductReportDTO> report = reportDamagedProductsInputPort.getDamagedProductsReport(storeId, startDate, endDate);
+        return new ApiResponse<>(HttpStatus.OK.value(), "SUCCESS", HttpStatus.OK, report);
     }
 }
