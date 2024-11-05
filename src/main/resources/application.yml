@@ -3,9 +3,9 @@ spring:
     name: "devolutions-svc"
 
   datasource:
-    url: jdbc:mysql://localhost:3306/devolution_service_maxi_clone
-    username: erikssonherlo
-    password: 201830459
+    url: jdbc:mysql://mysql-service.default.svc.cluster.local:3306/devolutions
+    username: cluster
+    password: cluster
 
   rabbitmq:
     host: rabbitmq-service.default.svc.cluster.local
@@ -17,11 +17,11 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://34.138.194.76:8761/eureka/
+      defaultZone: http://eureka-server-svc.default.svc.cluster.local:8761/eureka/
   instance:
     prefer-ip-address: false
     hostname: devolutions-svc
     instance-id: ${spring.application.name}:${server.port}
 
 server:
-  port: 8086
+  port: 8087
