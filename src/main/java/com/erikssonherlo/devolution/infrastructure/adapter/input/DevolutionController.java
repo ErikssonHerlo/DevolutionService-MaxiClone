@@ -29,6 +29,7 @@ public class DevolutionController {
     private final UpdateDevolutionInputPort updateDevolutionInputPort;
     private final GetAllDevolutionsInputPort getAllDevolutionsInputPort;
     private final GetAllDevolutionsByStatusInputPort getAllDevolutionsByStatusInputPort;
+    private final ReportAllDevolutionsInputPort reportAllDevolutionsInputPort;
 
     @GetMapping()
     public PaginatedResponse<List<Devolution>> getAllDevolutions(
@@ -66,5 +67,14 @@ public class DevolutionController {
     @DeleteMapping("/{id}")
     public ApiResponse<?> deleteDevolution(@PathVariable Long id){
         return new ApiResponse<>(HttpStatus.NO_CONTENT.value(),"SUCCESS",HttpStatus.NO_CONTENT,deleteDevolutionInputPort.deleteDevolution(id));
+    }
+
+    @GetMapping("/reports/all-devolutions")
+    public ApiResponse<List<Devolution>> reportAllDevolutions(@RequestParam(value = "storeId", required = false) List<Long> storeIds,
+                                                          @RequestParam(value = "status", required = false) String status,
+                                                          @RequestParam(value = "startDate", required = false) String startDate,
+                                                          @RequestParam(value = "endDate", required = false) String endDate) {
+        return new ApiResponse<>(HttpStatus.OK.value(), "SUCCESS", HttpStatus.OK,
+                reportAllDevolutionsInputPort.reportAllDevolutions(storeIds, status, startDate, endDate));
     }
 }
