@@ -1,5 +1,6 @@
 package com.erikssonherlo.devolution.infrastructure.adapter.output.persistence.jpa;
 
+import com.erikssonherlo.devolution.application.dto.DamagedProductReportDTO;
 import com.erikssonherlo.devolution.domain.model.Devolution;
 import com.erikssonherlo.devolution.domain.model.DevolutionDetail;
 import com.erikssonherlo.devolution.domain.model.enums.DevolutionStatus;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +64,20 @@ public class DevolutionJpaRepositoryAdapter implements DevolutionJpaRepositoryPo
         return devolutionJpaRepository.findByStoreIdIn(storeIds, pageable)
                 .map(this::mapToDomain);
     }
+
+    @Override
+    public List<Devolution> reportAllDevolutions(List<Long> storeIds, DevolutionStatus status, String startDate, String endDate) {
+
+        return devolutionJpaRepository.findAllByStoreIdInAndStatusAndCreatedAtBetween(storeIds, status.toString(), startDate, endDate).stream()
+                .map(this::mapToDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DamagedProductReportDTO> findDamagedProductsReportByStoreAndDateRange(Long storeId, LocalDateTime startDate, LocalDateTime endDate) {
+        return devolutionJpaRepository.findDamagedProductsReportByStoreAndDateRange(storeId, startDate, endDate);
+    }
+
     @Override
     public Devolution saveDevolution(Devolution devolution) {
         DevolutionEntity devolutionEntity = mapToEntity(devolution, false);
